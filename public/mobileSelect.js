@@ -47,8 +47,8 @@
 			_this.wheels = _this.mobileSelect.querySelector('.wheels');
 			_this.liHeight = _this.mobileSelect.querySelector('li').offsetHeight;
 			_this.ensureBtn = _this.mobileSelect.querySelector('.ensure');
-			_this.cancelBtn = _this.mobileSelect.querySelector('.cancel');
-			_this.grayLayer = _this.mobileSelect.querySelector('.grayLayer');
+			// _this.cancelBtn = _this.mobileSelect.querySelector('.cancel');
+			// _this.grayLayer = _this.mobileSelect.querySelector('.grayLayer');
 			_this.popUp = _this.mobileSelect.querySelector('.content');
 			_this.callback = config.callback || function(){};
 			_this.transitionEnd = config.transitionEnd || function(){};
@@ -80,12 +80,12 @@
 
 
 			//按钮监听
-			_this.cancelBtn.addEventListener('click',function(){
-				_this.hide();
-		    });
+			// _this.cancelBtn.addEventListener('click',function(){
+			// 	_this.hide();
+		    // });
 
 		    _this.ensureBtn.addEventListener('click',function(){
-				_this.hide();
+				// _this.hide();
 			    if(!_this.liHeight) {
 			        _this.liHeight =  _this.mobileSelect.querySelector('li').offsetHeight;
 			    }
@@ -101,12 +101,12 @@
 		    	_this.callback(_this.curIndexArr, _this.curValue);
 		    });
 
-		    _this.trigger.addEventListener('click',function(){
+		    // _this.trigger.addEventListener('click',function(){
 		    	_this.show();
-		    });
-		    _this.grayLayer.addEventListener('click',function(){
-				_this.hide();
-		    });
+		    // });
+		    // _this.grayLayer.addEventListener('click',function(){
+			// 	_this.hide();
+		    // });
 		    _this.popUp.addEventListener('click',function(){
 		    	event.stopPropagation();
 		    });
@@ -126,7 +126,7 @@
 				_this.ensureBtn.style.color = config.ensureBtnColor;
 			}
 			if(config.cancelBtnColor){
-				_this.cancelBtn.style.color = config.cancelBtnColor;
+				// _this.cancelBtn.style.color = config.cancelBtnColor;
 			}
 			if(config.titleColor){
 				_this.title = _this.mobileSelect.querySelector('.title');
@@ -147,8 +147,8 @@
 				_this.shadowMask.style.background = 'linear-gradient(to bottom, '+ config.bgColor + ', rgba(255, 255, 255, 0), '+ config.bgColor + ')';
 			}
 			if(!isNaN(config.maskOpacity)){
-				_this.grayMask = _this.mobileSelect.querySelector('.grayLayer');
-				_this.grayMask.style.background = 'rgba(0, 0, 0, '+ config.maskOpacity +')';
+				// _this.grayMask = _this.mobileSelect.querySelector('.grayLayer');
+				// _this.grayMask.style.background = 'rgba(0, 0, 0, '+ config.maskOpacity +')';
 			}
 		},
 
@@ -184,18 +184,15 @@
 
 		renderWheels: function(wheelsData, cancelBtnText, ensureBtnText){
 			var _this = this;
-			var cancelText = cancelBtnText ? cancelBtnText : '取消';
-			var ensureText = ensureBtnText ? ensureBtnText : '确认';
+			var cancelText = cancelBtnText ? cancelBtnText : 'Cancel';
+			var ensureText = ensureBtnText ? ensureBtnText : 'Set Date';
 			_this.mobileSelect = document.createElement("div");
 			_this.mobileSelect.className = "mobileSelect";
 			_this.mobileSelect.innerHTML =
-		    	'<div class="grayLayer"></div>'+
-		        '<div class="content">'+
+		    	'<div class="content">'+
 		            '<div class="btnBar">'+
 		                '<div class="fixWidth">'+
-		                    '<div class="cancel">'+ cancelText +'</div>'+
 		                    '<div class="title"></div>'+
-		                    '<div class="ensure">'+ ensureText +'</div>'+
 		                '</div>'+
 		            '</div>'+
 		            '<div class="panel">'+
@@ -205,7 +202,11 @@
 		                    '<div class="selectLine"></div>'+
 		                    '<div class="shadowMask"></div>'+
 		                '</div>'+
-		            '</div>'+
+					'</div>'+
+					'<div class="btnBar" style="border:0px;margin-top:10vh;">'+
+						'<div class="fixWidth">'+
+							'<div class="ensure">'+ ensureText +'</div>'+
+						'</div>'
 		        '</div>';
 		    document.body.appendChild(_this.mobileSelect);
 
@@ -218,7 +219,11 @@
 				if(_this.jsonType){
 					for(var j=0; j<wheelsData[i].data.length; j++){
 					//行
-						tempHTML += '<li data-id="'+wheelsData[i].data[j][_this.keyMap.id]+'">'+wheelsData[i].data[j][_this.keyMap.value]+'</li>';
+					if (wheelsData[i].data[j].childs["0"].id && wheelsData[i].data[j].childs["0"].id == "no_slots")
+						{ var errorStyle=' issstyle="color:red;"' } else { var errorStyle=''};
+						// console.log(wheelsData[i].data[j].childs["0"].id);
+						tempHTML += '<li data-id="'+wheelsData[i].data[j][_this.keyMap.id]+'"'+errorStyle+'>'+wheelsData[i].data[j][_this.keyMap.value]+'</li>';
+						// console.log(tempHTML);
 					}
 				}else{
 					for(var j=0; j<wheelsData[i].data.length; j++){
@@ -401,7 +406,8 @@
 						//console.log('插入Li');
 						for(var j=0; j<_this.displayJson[i].length; j++){
 						//行
-							tempHTML += '<li data-id="'+_this.displayJson[i][j][_this.keyMap.id]+'">'+_this.displayJson[i][j][_this.keyMap.value]+'</li>';
+						if (_this.displayJson[i][j][_this.keyMap.id] == "no_slots"){ var errorStyle=' style="color:red;"' } else if (_this.displayJson[i][j][_this.keyMap.id] == "strike_date"){ var errorStyle=' style="text-decoration: line-through;"' } else { var errorStyle=''};
+							tempHTML += '<li data-id="'+_this.displayJson[i][j][_this.keyMap.id]+'"'+errorStyle+'>'+_this.displayJson[i][j][_this.keyMap.value]+'</li>';
 						}
 						_this.slider[i].innerHTML = tempHTML;
 
@@ -411,7 +417,8 @@
 						tempHTML = '<ul class="selectContainer">';
 						for(var j=0; j<_this.displayJson[i].length; j++){
 						//行
-							tempHTML += '<li data-id="'+_this.displayJson[i][j][_this.keyMap.id]+'">'+_this.displayJson[i][j][_this.keyMap.value]+'</li>';
+							if (_this.displayJson[i][j][_this.keyMap.id] == "no_slots"){ var errorStyle=' style="color:red;"' } else if (_this.displayJson[i][j][_this.keyMap.id] == "strike_date"){ var errorStyle=' style="text-decoration: line-through;"' } else { var errorStyle=''};
+							tempHTML += '<li data-id="'+_this.displayJson[i][j][_this.keyMap.id]+'"'+errorStyle+'>'+_this.displayJson[i][j][_this.keyMap.value]+'</li>';
 						}
 						tempHTML += '</ul>';
 						tempWheel.innerHTML = tempHTML;
@@ -489,16 +496,16 @@
 	    	var positionArr = _this.getIndexArr();
 	    	if(_this.cascade){
 		    	for(var i=0; i<_this.wheel.length; i++){
-		    		temp.push(_this.displayJson[i][positionArr[i]]);
-		    	}
+					temp.push(_this.displayJson[i][positionArr[i]]);
+				}
 	    	}
 	    	else if(_this.jsonType){
 		    	for(var i=0; i<_this.curDistance.length; i++){
-		    		temp.push(_this.wheelsData[i].data[_this.getIndex(_this.curDistance[i])]);
+					temp.push(_this.wheelsData[i].data[_this.getIndex(_this.curDistance[i])]);
 		    	}
 	    	}else{
 		    	for(var i=0; i<_this.curDistance.length; i++){
-		    		temp.push(_this.getInnerHtml(i));
+					temp.push(_this.getInnerHtml(i));
 		    	}
 	    	}
 	    	return temp;

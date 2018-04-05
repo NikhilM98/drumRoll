@@ -1,3 +1,7 @@
+
+.hidden{
+  display: none;
+}
 .mobileSelect {
   position: relative;
   z-index: 0;
@@ -68,8 +72,9 @@
   color: #666;
 }
 .mobileSelect .content .btnBar .ensure {
-  right: 0;
   color: #1e83d3;
+  width: 100%;
+  text-align: center;
 }
 .mobileSelect .content .btnBar .title {
   font-size: 15px;
@@ -146,5 +151,5 @@
   visibility: visible;
 }
 .mobileSelect-show .content {
-  bottom: 0;
+  top: 15vh;
 }
